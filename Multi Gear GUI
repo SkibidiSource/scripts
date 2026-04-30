@@ -1,0 +1,64 @@
+-- by BlasterGuy-p2w
+-- Create a ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.CoreGui
+screenGui.ResetOnSpawn = false -- Prevents the GUI from disappearing after death
+
+-- Create the button
+local equipButton = Instance.new("TextButton")
+equipButton.Parent = screenGui
+equipButton.Size = UDim2.new(0, 150, 0, 50)
+equipButton.Position = UDim2.new(1, -160, 0, 10) -- Top right corner
+equipButton.Text = "Equip & Auto-Use"
+equipButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Button color changed to black
+equipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+equipButton.Font = Enum.Font.SourceSansBold
+equipButton.TextSize = 18
+
+-- Add an outline to the button
+local outline = Instance.new("UIStroke")
+outline.Parent = equipButton
+outline.Thickness = 2
+outline.Color = Color3.fromRGB(255, 255, 255)
+outline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+-- Rainbow outline function
+local function cycleRainbow()
+    local hue = 0
+    while true do
+        hue = hue + 1 / 360 -- Increment hue to change color
+        if hue >= 1 then hue = 0 end
+        outline.Color = Color3.fromHSV(hue, 1, 1) -- Convert hue to RGB
+        wait(0.05) -- Adjust speed of the rainbow effect
+    end
+end
+
+-- Start the rainbow effect
+spawn(cycleRainbow)
+
+-- Equip and auto-use function
+local function equipAndUseItems()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local backpack = player.Backpack
+
+    -- Equip and use all items in the inventory
+    for _, tool in ipairs(backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = character
+            -- Simulate tool activation
+            tool:Activate()
+        end
+    end
+
+    -- Use all currently equipped tools again
+    for _, tool in ipairs(character:GetChildren()) do
+        if tool:IsA("Tool") then
+            -- Simulate tool activation
+            tool:Activate()
+        end
+    end
+end
+
+-- Button click event
+equipButton.MouseButton1Click:Connect(equipAndUseItems)
