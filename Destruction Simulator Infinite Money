@@ -1,0 +1,19 @@
+_G.MoneyBoostEnabled = true
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local generateBoostEvent = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("generateBoost")
+
+local function generateMoneyBoost()
+    while _G.MoneyBoostEnabled do
+        generateBoostEvent:FireServer("Coins", 480, 3000000)
+        task.wait(0)
+    end
+end
+
+task.spawn(function()
+    while task.wait(0.1) do
+        if _G.MoneyBoostEnabled then
+            generateMoneyBoost()
+        end
+    end
+end)
